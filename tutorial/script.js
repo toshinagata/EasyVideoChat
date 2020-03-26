@@ -3,6 +3,23 @@ let localStream = null;
 let peer = null;
 let existingCall = null;
 
+//  Get the query parameters
+//  Cf. https://stackoverflow.com/questions/901115/
+var qs = (function(a) {
+  if (a == "") return {};
+  var b = {};
+  for (var i = 0; i < a.length; ++i) {
+    var p=a[i].split('=', 2);
+    if (p.length == 1)
+      b[p[0]] = "";
+    else
+      b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+  }
+  return b;
+})(window.location.search.substr(1).split('&'));
+
+let my_id = qs["id"];
+
 navigator.mediaDevices.getUserMedia({video: true, audio: true})
   .then(function(stream) {
     //  Success
@@ -14,7 +31,7 @@ navigator.mediaDevices.getUserMedia({video: true, audio: true})
     return;
   });
 
-peer = new Peer({
+peer = new Peer(my_id, {
   key: '6ff06b10-5b94-48ca-8e22-a559b8132ba6',
   debug: 3
 });
